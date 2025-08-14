@@ -21,3 +21,18 @@ spec:
     automated:
       selfHeal: true
       prune: true
+
+  # Ignore differences for labels on nodejs applications
+  ignoreDifferences:
+  - group: apps
+    kind: Deployment
+    name: "*nodejs*"
+    jsonPointers:
+    - /metadata/labels
+    - /spec/template/metadata/labels
+  - group: apps
+    kind: Deployment
+    name: "world-portal-*"
+    jsonPointers:
+    - /metadata/labels
+    - /spec/template/metadata/labels
