@@ -33,8 +33,6 @@ spec:
     - /metadata/annotations
     - /spec/template/metadata/labels
     - /spec/template/metadata/annotations
-    - /spec/template/spec/initContainers
-    - /spec/template/spec/containers/*/env
   - group: apps
     kind: Deployment
     name: world-portal-nodejsdeployment
