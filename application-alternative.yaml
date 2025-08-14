@@ -1,0 +1,50 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: myapp-argo-application
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/sambhav-splunk/argocd-setup.git
+    targetRevision: HEAD
+    path: dev
+  destination: 
+    server: https://kubernetes.default.svc
+    namespace: myapp
+
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    - RespectIgnoreDifferences=true
+
+    automated:
+      selfHeal: true
+      prune: true
+
+  # Ignore differences for labels and annotations on nodejs applications
+  ignoreDifferences:
+  - group: apps
+    kind: Deployment
+    name: world-portal-nodejsdeployment
+    jsonPointers:
+    - /metadata/labels
+    - /metadata/annotations
+    - /spec/template/metadata/labels
+    - /spec/template/metadata/annotations
+    - /spec/template/spec/initContainers
+    - /spec/template/spec/containers/*/env
+    - /spec/template/spec/initContainers/*/env
+    - /spec/template/spec/containers/*/envFrom
+    - /spec/template/spec/initContainers/*/envFrom
+    - /spec/template/spec/containers/0/env
+    - /spec/template/spec/containers/0/envFrom
+    - /spec/template/spec/containers
+    - /spec/replicas
+  - group: apps
+    kind: Deployment
+    name: world-portal-nodejsdeployment
+    managedFieldsManagers:
+    - kubectl
+    - argocd-application-controller
