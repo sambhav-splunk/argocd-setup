@@ -17,22 +17,27 @@ spec:
   syncPolicy:
     syncOptions:
     - CreateNamespace=true
+    - RespectIgnoreDifferences=true
 
     automated:
       selfHeal: true
       prune: true
 
-  # Ignore differences for labels on nodejs applications
+  # Ignore differences for labels and annotations on nodejs applications
   ignoreDifferences:
   - group: apps
     kind: Deployment
-    name: "*nodejs*"
+    name: world-portal-nodejsdeployment
     jsonPointers:
     - /metadata/labels
+    - /metadata/annotations
     - /spec/template/metadata/labels
+    - /spec/template/metadata/annotations
+    - /spec/template/spec/initContainers
+    - /spec/template/spec/containers/*/env
   - group: apps
     kind: Deployment
-    name: "world-portal-*"
-    jsonPointers:
-    - /metadata/labels
-    - /spec/template/metadata/labels
+    name: world-portal-nodejsdeployment
+    managedFieldsManagers:
+    - kubectl
+    - argocd-application-controller
